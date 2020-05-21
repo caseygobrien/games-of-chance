@@ -41,21 +41,49 @@ def cho_han(bet=5, call="even"):
 	print("You now have ${} remaining.".format(money))
 
 
-def highest_card():
-	deck_of_cards = []
-	for suit in range(4):
+def highest_card(bet=5):
+	global money
+	deck_of_cards = {"Spades": [], "Hearts": [], "Clubs": [], "Diamonds": []}
+	for cards in deck_of_cards.values():
 		for card in range(2, 15):
-			deck_of_cards.append(card)
-	player1_card_index = random.randint(0, 52)
-	player1_card = deck_of_cards.pop(player1_card_index)
-	player2_card_index = random.randint(0, 51)
-	player2_card = deck_of_cards.pop(player2_card_index)
-	print(player1_card)
-	print(player2_card)
-	print(deck_of_cards)	
+			cards.append(card)
+	suits = list(deck_of_cards)
+	numbers_to_cards = {11: "Jack", 12: "Queen", 13: "King", 14: "Ace"}
+	player1_suit = random.choice(suits)
+	player1_num = deck_of_cards[player1_suit].pop(random.randint(0,12))
+	if player1_num in numbers_to_cards:
+		for number in numbers_to_cards:
+			if player1_num == number:
+				player1_card = "{} of {}".format(numbers_to_cards[number], player1_suit)
+	else:
+		player1_card = "{} of {}".format(player1_num, player1_suit)
+	player2_suit = random.choice(suits)
+	if player2_suit == player1_suit:
+		player2_num = deck_of_cards[player2_suit].pop(random.randint(0,11))
+	else:
+		player2_num = deck_of_cards[player2_suit].pop(random.randint(0,12))
+	if player2_num in numbers_to_cards:
+		for number in numbers_to_cards:
+			if player2_num == number:
+				player2_card = "{} of {}".format(numbers_to_cards[number], player2_suit)
+	else:
+		player2_card = "{} of {}".format(player2_num, player2_suit)
+	print("You drew the {}, and your opponent drew the {}".format(player1_card, player2_card))
+	if player1_num == player2_num:
+		print("It's a tie")
+		print("You now have ${}".format(money))
+	elif player1_num > player2_num:
+		money += bet
+		print("You have won ${}".format(bet))
+		print("You now have ${}".format(money))
+	else:
+		money -= bet
+		print("You have lost ${}".format(bet))
+		print("You now have ${}".format(money))
 
+	
+	
 #Call your game of chance functions here
-# coin_flip(10, "tails")
-# cho_han(20, "even")
-
-highest_card()
+coin_flip(10, "tails")
+cho_han(20, "even")
+highest_card(50)
