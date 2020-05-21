@@ -39,8 +39,23 @@ def cho_han(bet=5, call="even"):
 		print("You have lost ${}".format(bet))
 		money -= bet
 	print("You now have ${} remaining.".format(money))
-	
+
+
+def highest_card():
+	deck_of_cards = []
+	for suit in range(4):
+		for card in range(2, 15):
+			deck_of_cards.append(card)
+	player1_card_index = random.randint(0, 52)
+	player1_card = deck_of_cards.pop(player1_card_index)
+	player2_card_index = random.randint(0, 51)
+	player2_card = deck_of_cards.pop(player2_card_index)
+	print(player1_card)
+	print(player2_card)
+	print(deck_of_cards)	
+
 #Call your game of chance functions here
 # coin_flip(10, "tails")
 # cho_han(20, "even")
 
+highest_card()
