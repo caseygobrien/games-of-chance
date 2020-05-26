@@ -116,10 +116,14 @@ def roulette(betting):
 	# determine bets and payouts
 	payout = 0
 	money_made = 0
+	print("Your Bets")
+	for key, value in betting.items():
+		print("{}: ${}".format(key, value))
+	print("=" * 30)
 	for key, value in betting.items():
 		if key == '00':
 			betting[-1] = betting.pop("00")
-		if key == 'red':
+		elif key == 'red':
 			if spin in red_numbers:
 				print("Your red bet has made ${}".format(value))
 				money_made += value
@@ -127,7 +131,7 @@ def roulette(betting):
 			else:
 				print("Your red bet has lost ${}".format(value))
 				money_made -= value
-		if key == 'black':
+		elif key == 'black':
 			if spin in black_numbers:
 				print("Your black bet has made ${}".format(value))
 				money_made += value
@@ -135,15 +139,15 @@ def roulette(betting):
 			else:
 				print("Your red bet has lost ${}".format(value))
 				money_made -= value
-		if key == "odd":
+		elif key == "odd":
 			if spin == -1 or spin == 0 or spin % 2 == 0:
-				print("Your odd bet has lost {}".format(value))
+				print("Your odd bet has lost ${}".format(value))
 				money_made -= value
 			else:
-				print("Your odd bet has made${}".format(value))
+				print("Your odd bet has made ${}".format(value))
 				money_made += value
 				payout += 2 * value
-		if key == "even":
+		elif key == "even":
 			if spin == -1 or spin == 0 or spin % 2 == 1:
 				print("Your even bet has lost ${}".format(value))
 				money_made -= value
@@ -151,6 +155,15 @@ def roulette(betting):
 				print("Your even bet has made ${}".format(value))
 				money_made += value
 				payout += 2 * value
+		else:
+			if key == spin:
+				winnings = value * 35
+				print("Your bet on number {} has made ${}".format(key, winnings))
+				money_made += winnings
+				payout += (winnings + value)
+			else:
+				print("Your bet on number {} has lost ${}".format(key, value))
+				money_made -= value
 	if money_made > 0:
 		print("You have made ${}".format(money_made))
 	elif money_made < 0:
@@ -162,10 +175,11 @@ def roulette(betting):
 	return("You now have ${}".format(money))
 
 
-roulette_bets = {'red': 10, 'even': 10, 'odd': 50, 22: 10}
-print(roulette(roulette_bets))
+
 
 #Call your game of chance functions here
-# coin_flip(10, "tails")
-# cho_han(20, "even")
-# highest_card(50)
+coin_flip(10, "tails")
+cho_han(20, "even")
+highest_card(50)
+roulette_bets = {'red': 10, 'even': 10, 'odd': 50, 22: 10}
+print(roulette(roulette_bets))
