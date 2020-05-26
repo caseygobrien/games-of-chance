@@ -1,8 +1,8 @@
 import random
-money = 100
-
-
+money = 1000
 # Write your game of chance functions here
+
+
 def coin_flip(bet=5, call="heads"):
 	global money
 	if call.lower() != "heads" and call.lower() != "tails":
@@ -20,8 +20,6 @@ def coin_flip(bet=5, call="heads"):
 	else:
 		print("You have lost ${}".format(bet))
 		money -= bet
-	print("You have ${} remaining.".format(money))
-
 
 def cho_han(bet=5, call="even"):
 	global money
@@ -103,7 +101,6 @@ def roulette(betting):
 	black_numbers.remove(0)
 	# spin the wheel
 	spin = random.choice(wheel)
-	spin_plus_color = ''
 	if spin in red_numbers:
 		spin_plus_color = "Red {}".format(spin)
 	elif spin in black_numbers:
@@ -127,7 +124,7 @@ def roulette(betting):
 			if spin in red_numbers:
 				print("Your red bet has made ${}".format(value))
 				money_made += value
-				payout +=  2 * value
+				payout += 2 * value
 			else:
 				print("Your red bet has lost ${}".format(value))
 				money_made -= value
@@ -135,7 +132,7 @@ def roulette(betting):
 			if spin in black_numbers:
 				print("Your black bet has made ${}".format(value))
 				money_made += value
-				payout +=  2 * value
+				payout += 2 * value
 			else:
 				print("Your red bet has lost ${}".format(value))
 				money_made -= value
@@ -172,14 +169,33 @@ def roulette(betting):
 	else:
 		print("You broke even")
 	money += payout
-	return("You now have ${}".format(money))
+	return "You now have ${}".format(money)
 
 
-
-
-#Call your game of chance functions here
-coin_flip(10, "tails")
-cho_han(20, "even")
-highest_card(50)
-roulette_bets = {'red': 10, 'even': 10, 'odd': 50, 22: 10}
-print(roulette(roulette_bets))
+# Call your game of chance functions here
+playing = True
+while playing:
+	print("You have ${}".format(money))
+	game = input("""Choose a game:
+	[F]lip coin
+	[C]ho Han
+	[H]igh card
+	[R]oulette
+	[Q]uit
+	""").lower()
+	if game == 'f':
+		coin = input("Heads or tails?\n").lower()
+		if coin != "heads" and coin != "tails":
+			print("Please choose 'heads' or 'tails'")
+			print('-' * 30)
+			print()
+			continue
+		bet = int(input("Your bet?\n"))
+		coin_flip(bet, coin)
+	elif game == 'q':
+		break
+# coin_flip(10, "tails")
+# cho_han(20, "even")
+# highest_card(50)
+# roulette_bets = {'red': 10, 'even': 10, 'odd': 50, 22: 10}
+# print(roulette(roulette_bets))
