@@ -40,7 +40,6 @@ def cho_han(bet=5, call="even"):
 	else:
 		print("You have lost ${}".format(bet))
 		money -= bet
-	print("You have ${} remaining.".format(money))
 
 
 def highest_card(bet=5):
@@ -175,6 +174,9 @@ def roulette(betting):
 # Call your game of chance functions here
 playing = True
 while playing:
+	if money == 0:
+		print("You are out of money")
+		break
 	print("You have ${}".format(money))
 	game = input("""Choose a game:
 	[F]lip coin
@@ -191,8 +193,29 @@ while playing:
 			print()
 			continue
 		bet = int(input("Your bet?\n"))
+		if bet > money:
+			print("You don't have enough money to make that bet")
+			continue
 		coin_flip(bet, coin)
+		print('-' * 30)
+		print()
+	elif game == "c":
+		dice = input("Odd or even?\n").lower()
+		if dice != "odd" and dice != "even":
+			print("Please choose 'odd' or 'even'")
+			print('-' * 30)
+			print()
+			continue
+		bet = int(input("Your bet?\n"))
+		cho_han(bet, dice)
+		print('-' * 30)
+		print()
 	elif game == 'q':
+		print("You walked away with ${}".format(money))
+		if money > 1000:
+			print("Great job!")
+		else:
+			print("Better luck next time.")
 		break
 # coin_flip(10, "tails")
 # cho_han(20, "even")
