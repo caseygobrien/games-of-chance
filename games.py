@@ -5,13 +5,9 @@ money = 1000
 
 def coin_flip(coin_bet, call):
 	payout = 0
-	flip = random.randint(1, 2)
-	if flip == 1:
-		flip = "heads"
-		print("The coin landed on heads.")
-	else:
-		flip = "tails"
-		print("The coin landed on tails")
+	coin = ('heads', 'tails')
+	flip = random.choice(coin)
+	print("The coin landed on {}".format(flip))
 	if flip == call:
 		print("You won ${}".format(bet))
 		payout = coin_bet * 2
@@ -43,12 +39,15 @@ def highest_card(card_bet):
 	payout = 0
 	player1_card = ''
 	player2_card = ''
+	# create a full deck of cards
 	deck_of_cards = {"Spades": [], "Hearts": [], "Clubs": [], "Diamonds": []}
 	for cards in deck_of_cards.values():
 		for card in range(2, 15):
 			cards.append(card)
 	suits = list(deck_of_cards)
 	numbers_to_cards = {11: "Jack", 12: "Queen", 13: "King", 14: "Ace"}
+	suit_values = {"Spades": 3, "Hearts": 2, "Clubs": 1, "Diamonds": 0}
+	# player 1 draws a random card
 	player1_suit = random.choice(suits)
 	player1_num = deck_of_cards[player1_suit].pop(random.randint(0, len(player1_suit) - 1))
 	if player1_num in numbers_to_cards:
@@ -57,6 +56,7 @@ def highest_card(card_bet):
 				player1_card = "{} of {}".format(numbers_to_cards[number], player1_suit)
 	else:
 		player1_card = "{} of {}".format(player1_num, player1_suit)
+	# player 2 draws a random card
 	player2_suit = random.choice(suits)
 	player2_num = deck_of_cards[player2_suit].pop(random.randint(0, len(player2_suit) - 1))
 	if player2_num in numbers_to_cards:
@@ -65,11 +65,13 @@ def highest_card(card_bet):
 				player2_card = "{} of {}".format(numbers_to_cards[number], player2_suit)
 	else:
 		player2_card = "{} of {}".format(player2_num, player2_suit)
+	# compare cards
 	print("You drew the {}, and your opponent drew the {}".format(player1_card, player2_card))
+	# in the event of a tie, add the suit value to the number
 	if player1_num == player2_num:
-		print("It's a tie")
-		payout = bet
-	elif player1_num > player2_num:
+		player1_num += suit_values[player1_suit]
+		player2_num += suit_values[player2_suit]
+	if player1_num > player2_num:
 		payout = card_bet * 2
 		print("You have won ${}".format(bet))
 	else:
@@ -80,12 +82,15 @@ def highest_card(card_bet):
 def roulette(betting):
 	# possible bets in roulette are individual numbers, red, black, odd, and even
 	# arguments will be {what you're betting on : bet amount}
+	# build a roulette wheel with numbers from -1 to 36 with -1 representing 00
 	payout = 0
 	wheel = []
 	black_numbers = []
 	for number in range(-1, 37):
 		wheel.append(number)
+	# set the red numbers
 	red_numbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
+	# anything not in red will be black except 0 and 00
 	for number in wheel:
 		if number not in red_numbers:
 			black_numbers.append(number)
@@ -104,13 +109,16 @@ def roulette(betting):
 	print("The ball has landed on {}".format(spin_plus_color))
 	# determine bets and payouts
 	money_made = 0
+	# first show the player his or her bets
 	print("Your Bets")
 	for key, value in betting.items():
-		print("{}: ${}".format(key, value))
+		temp_key = key
+		if temp_key == -1:
+			temp_key = '00'
+		print("{}: ${}".format(temp_key, value))
 	print("-" * 30)
+	# determine which bets are winners
 	for key, value in betting.items():
-		if key == '00':
-			betting[-1] = betting.pop("00")
 		if key == 'red':
 			if spin in red_numbers:
 				print("Your red bet has made ${}".format(value))
@@ -145,11 +153,15 @@ def roulette(betting):
 				payout += 2 * value
 		else:
 			if key == spin:
+				if key == -1:
+					key = '00'
 				winnings = value * 35
 				print("Your bet on number {} has made ${}".format(key, winnings))
 				money_made += winnings
 				payout += (winnings + value)
 			else:
+				if key == -1:
+					key = '00'
 				print("Your bet on number {} has lost ${}".format(key, value))
 				money_made -= value
 	if money_made > 0:
@@ -190,7 +202,8 @@ while playing:
 	if money == 0:
 		print("You are out of money")
 		print("Better luck next time!")
-		break
+		playing = False
+		continue
 	print("You have ${}".format(money))
 	print()
 	game = input("""Choose a game:
@@ -203,14 +216,18 @@ while playing:
 	if game == 'f':
 		flipping = True
 		while flipping:
-			coin = input("Heads or tails?\n").lower()
-			if coin != "heads" and coin != "tails":
+			coin_call = input("Heads or tails?\n").lower()
+			if coin_call == 'h':
+				coin_call = 'heads'
+			elif coin_call == 't':
+				coin_call = 'tails'
+			if coin_call != "heads" and coin_call != "tails":
 				print("Please choose 'heads' or 'tails'")
 				print()
 				continue
 			bet = get_bet()
 			print('-' * 30)
-			money += coin_flip(bet, coin)
+			money += coin_flip(bet, coin_call)
 			print('-' * 30)
 			print("You have ${} remaining".format(money))
 			if money == 0:
