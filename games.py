@@ -4,7 +4,7 @@ money = 1000
 
 
 def coin_flip(bet, call):
-	global money
+	payout = 0
 	flip = random.randint(1, 2)
 	if flip == 1:
 		flip = "heads"
@@ -14,12 +14,13 @@ def coin_flip(bet, call):
 		print("The coin landed on tails")
 	if flip == call:
 		print("You won ${}".format(bet))
-		money += bet * 2
+		payout = bet *2
 	else:
 		print("You lost ${}".format(bet))
+	return payout
 
 def cho_han(bet, call):
-	global money
+	payout = 0
 	roll = 0
 	for i in range(2):
 		die = random.randint(1, 6)
@@ -31,12 +32,13 @@ def cho_han(bet, call):
 		roll = "odd"
 	if call == roll:
 		print("You have won ${}".format(bet))
-		money += bet * 2
+		payout = bet * 2
 	else:
 		print("You have lost ${}".format(bet))
+	return payout
 
 def highest_card(bet):
-	global money
+	payout = 0
 	player1_card = ''
 	player2_card = ''
 	deck_of_cards = {"Spades": [], "Hearts": [], "Clubs": [], "Diamonds": []}
@@ -64,17 +66,19 @@ def highest_card(bet):
 	print("You drew the {}, and your opponent drew the {}".format(player1_card, player2_card))
 	if player1_num == player2_num:
 		print("It's a tie")
+		payout = bet
 	elif player1_num > player2_num:
-		money += bet * 2
+		payout = bet * 2
 		print("You have won ${}".format(bet))
 	else:
 		print("You have lost ${}".format(bet))
+	return payout
 
 	
 def roulette(betting):
 	# possible bets in roulette are individual numbers, red, black, odd, and even
 	# arguments will be {what you're betting on : bet amount}
-	global money
+	payout = 0
 	wheel = []
 	black_numbers = []
 	for number in range(-1, 37):
@@ -97,7 +101,6 @@ def roulette(betting):
 		spin_plus_color = "Green 00"
 	print("The ball has landed on {}".format(spin_plus_color))
 	# determine bets and payouts
-	payout = 0
 	money_made = 0
 	print("Your Bets")
 	for key, value in betting.items():
@@ -106,7 +109,7 @@ def roulette(betting):
 	for key, value in betting.items():
 		if key == '00':
 			betting[-1] = betting.pop("00")
-		elif key == 'red':
+		if key == 'red':
 			if spin in red_numbers:
 				print("Your red bet has made ${}".format(value))
 				money_made += value
@@ -154,8 +157,27 @@ def roulette(betting):
 		print("You have lost ${}".format(positive_money))
 	else:
 		print("You broke even")
-	money += payout
-	return "You now have ${}".format(money)
+	return payout
+
+
+def get_bet():
+	global money
+	betting = True
+	while betting:
+		try:
+			bet = int(input("Your bet?\n"))
+		except ValueError:
+			print("Bet must be an integer")
+			print()
+			continue
+		if bet > money:
+			print("You don't have enough money to make that bet")
+			print()
+			continue
+		money -= bet
+		betting = False
+	return bet
+	
 
 
 # Call your game of chance functions here
@@ -184,19 +206,9 @@ while playing:
 				print("Please choose 'heads' or 'tails'")
 				print()
 				continue
-			try:
-				bet = int(input("Your bet?\n"))
-			except ValueError:
-				print("Bet must be an integer")
-				print()
-				continue
-			if bet > money:
-				print("You don't have enough money to make that bet")
-				print()
-				continue
-			money -= bet
+			bet = get_bet()
 			print('-' * 30)
-			coin_flip(bet, coin)
+			money += coin_flip(bet, coin)
 			print('-' * 30)
 			print("You have ${} remaining".format(money))
 			if money ==0:
@@ -216,19 +228,9 @@ while playing:
 				print("Please choose 'odd' or 'even'")
 				print()
 				continue
-			try:
-				bet = int(input("Your bet?\n"))
-			except ValueError:
-				print("Bet must be an integer")
-				print()
-				continue
-			if bet > money:
-				print("You don't have enough money to make that bet")
-				print()
-				continue
-			money -= bet
+			bet = get_bet()
 			print('-' * 30)
-			cho_han(bet, dice)
+			money += cho_han(bet, dice)
 			print('-' * 30)
 			print("You have ${} remaining".format(money))
 			if money == 0:
@@ -243,19 +245,9 @@ while playing:
 	elif game == 'h':
 		drawing = True
 		while drawing:
-			try:
-				bet = int(input("Your bet?\n"))
-			except ValueError:
-				print("Bet must be an integer")
-				print()
-				continue
-			if bet > money:
-				print("You don't have enough money to make that bet")
-				print()
-				continue
-			moeny -= bet
+			bet = get_bet()
 			print('-' * 30)
-			highest_card(bet)
+			money += highest_card(bet)
 			print('-' * 30)
 			print("You have ${} remaining".format(money))
 			if money == 0:
@@ -293,73 +285,18 @@ while playing:
 				if number_to_bet < -1 or number_to_bet > 36:
 					print("Value must be a number between 00 and 36")
 					print()
-				try:
-					bet = int(input("Your bet?\n"))
-				except ValueError:
-					print("Bet must be an integer")
-					print()
-					continue
-				if bet > money:
-					print("You don't have enough money to make that bet")
-					print()
-					continue
-				money -= bet
-				roulette_bets[number_to_bet] = bet
+				roulette_bets[number_to_bet] = get_bet()
 			elif type_of_bet == 'o':
-				try:
-					bet = int(input("Your bet?\n"))
-				except ValueError:
-					print("Bet must be an integer")
-					print()
-					continue
-				if bet > money:
-					print("You don't have enough money to make that bet")
-					print()
-					continue
-				money -= bet
-				roulette_bets['odd'] = bet
+				roulette_bets['odd'] = get_bet()
 			elif type_of_bet == 'e':
-				try:
-					bet = int(input("Your bet?\n"))
-				except ValueError:
-					print("Bet must be an integer")
-					print()
-					continue
-				if bet > money:
-					print("You don't have enough money to make that bet")
-					print()
-					continue
-				money -= bet
-				roulette_bets['even'] = bet
+				roulette_bets['even'] = get_bet()
 			elif type_of_bet == 'r':
-				try:
-					bet = int(input("Your bet?\n"))
-				except ValueError:
-					print("Bet must be an integer")
-					print()
-					continue
-				if bet > money:
-					print("You don't have enough money to make that bet")
-					print()
-					continue
-				money -= bet
-				roulette_bets['red'] = bet
+				roulette_bets['red'] = get_bet()
 			elif type_of_bet == 'b':
-				try:
-					bet = int(input("Your bet?\n"))
-				except ValueError:
-					print("Bet must be an integer")
-					print()
-					continue
-				if bet > money:
-					print("You don't have enough money to make that bet")
-					print()
-					continue
-				money -= bet
-				roulette_bets['black'] = bet
+				roulette_bets['black'] = get_bet()
 			elif type_of_bet =='s':
 				print('-' * 30)
-				roulette(roulette_bets)
+				money += roulette(roulette_bets)
 				print('-' * 30)
 				print("You have ${} remaining".format(money))
 				if money == 0:
