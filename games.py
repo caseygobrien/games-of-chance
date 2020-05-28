@@ -3,7 +3,7 @@ money = 1000
 # Write your game of chance functions here
 
 
-def coin_flip(bet, call):
+def coin_flip(coin_bet, call):
 	payout = 0
 	flip = random.randint(1, 2)
 	if flip == 1:
@@ -14,12 +14,13 @@ def coin_flip(bet, call):
 		print("The coin landed on tails")
 	if flip == call:
 		print("You won ${}".format(bet))
-		payout = bet *2
+		payout = coin_bet * 2
 	else:
 		print("You lost ${}".format(bet))
 	return payout
 
-def cho_han(bet, call):
+
+def cho_han(dice_bet, call):
 	payout = 0
 	roll = 0
 	for i in range(2):
@@ -32,12 +33,13 @@ def cho_han(bet, call):
 		roll = "odd"
 	if call == roll:
 		print("You have won ${}".format(bet))
-		payout = bet * 2
+		payout = dice_bet * 2
 	else:
 		print("You have lost ${}".format(bet))
 	return payout
 
-def highest_card(bet):
+
+def highest_card(card_bet):
 	payout = 0
 	player1_card = ''
 	player2_card = ''
@@ -68,7 +70,7 @@ def highest_card(bet):
 		print("It's a tie")
 		payout = bet
 	elif player1_num > player2_num:
-		payout = bet * 2
+		payout = card_bet * 2
 		print("You have won ${}".format(bet))
 	else:
 		print("You have lost ${}".format(bet))
@@ -163,22 +165,22 @@ def roulette(betting):
 def get_bet():
 	global money
 	betting = True
+	cash_bet = ''
 	while betting:
 		try:
-			bet = int(input("Your bet?\n"))
+			cash_bet = int(input("Your bet?\n"))
 		except ValueError:
 			print("Bet must be an integer")
 			print()
 			continue
-		if bet > money:
+		if cash_bet > money:
 			print("You don't have enough money to make that bet")
 			print()
 			continue
-		money -= bet
+		money -= cash_bet
 		betting = False
-	return bet
+	return cash_bet
 	
-
 
 # Call your game of chance functions here
 print()
@@ -211,7 +213,7 @@ while playing:
 			money += coin_flip(bet, coin)
 			print('-' * 30)
 			print("You have ${} remaining".format(money))
-			if money ==0:
+			if money == 0:
 				flipping = False
 				continue
 			again = input("Play again? (y/n)\n").lower()
@@ -294,7 +296,7 @@ while playing:
 				roulette_bets['red'] = get_bet()
 			elif type_of_bet == 'b':
 				roulette_bets['black'] = get_bet()
-			elif type_of_bet =='s':
+			elif type_of_bet == 's':
 				print('-' * 30)
 				money += roulette(roulette_bets)
 				print('-' * 30)
