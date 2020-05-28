@@ -5,7 +5,6 @@ money = 1000
 
 def coin_flip(bet, call):
 	global money
-	money -= bet
 	flip = random.randint(1, 2)
 	if flip == 1:
 		flip = "heads"
@@ -21,7 +20,6 @@ def coin_flip(bet, call):
 
 def cho_han(bet, call):
 	global money
-	money -= bet
 	roll = 0
 	for i in range(2):
 		die = random.randint(1, 6)
@@ -39,7 +37,6 @@ def cho_han(bet, call):
 
 def highest_card(bet):
 	global money
-	money -= bet
 	player1_card = ''
 	player2_card = ''
 	deck_of_cards = {"Spades": [], "Hearts": [], "Clubs": [], "Diamonds": []}
@@ -190,13 +187,14 @@ while playing:
 			try:
 				bet = int(input("Your bet?\n"))
 			except ValueError:
-				print("Bet must be an interger")
+				print("Bet must be an integer")
 				print()
 				continue
 			if bet > money:
 				print("You don't have enough money to make that bet")
 				print()
 				continue
+			money -= bet
 			print('-' * 30)
 			coin_flip(bet, coin)
 			print('-' * 30)
@@ -228,6 +226,7 @@ while playing:
 				print("You don't have enough money to make that bet")
 				print()
 				continue
+			money -= bet
 			print('-' * 30)
 			cho_han(bet, dice)
 			print('-' * 30)
@@ -254,6 +253,7 @@ while playing:
 				print("You don't have enough money to make that bet")
 				print()
 				continue
+			moeny -= bet
 			print('-' * 30)
 			highest_card(bet)
 			print('-' * 30)
